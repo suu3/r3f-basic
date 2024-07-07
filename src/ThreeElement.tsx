@@ -7,41 +7,29 @@ import { useControls } from "leva";
 const ThreeElement = () => {
   const boxRef = useRef<THREE.Mesh>(null);
   const boxCopyRef = useRef<THREE.Mesh>(null);
-  const boxContorl = useControls({
-    width: {
+  const boxControl = useControls({
+    radius: {
       value: 1,
       min: 0.1,
       max: 10,
       step: 0.1,
     },
-    height: {
-      value: 1,
-      min: 0.1,
-      max: 10,
+    seg: {
+      value: 32,
+      min: 1,
+      max: 100,
+      step: 1,
+    },
+    thetaStart: {
+      value: 0,
+      min: 0,
+      max: 360,
       step: 0.1,
     },
-    depth: {
-      value: 1,
-      min: 0.1,
-      max: 10,
-      step: 0.1,
-    },
-    widthSeg: {
-      value: 1,
-      min: 0.1,
-      max: 10,
-      step: 0.1,
-    },
-    heightSeg: {
-      value: 1,
-      min: 0.1,
-      max: 10,
-      step: 0.1,
-    },
-    depthSeg: {
-      value: 1,
-      min: 0.1,
-      max: 10,
+    thetaLength: {
+      value: 360,
+      min: 0,
+      max: 360,
       step: 0.1,
     },
   });
@@ -51,20 +39,18 @@ const ThreeElement = () => {
 
   useEffect(() => {
     boxCopyRef.current.geometry = boxRef.current?.geometry;
-  }, [boxContorl]);
+  }, [boxControl]);
 
   return (
     <>
       <directionalLight position={[5, 5, 5]} />
       <mesh ref={boxRef} position={[0, 0, 0]}>
-        <boxGeometry
+        <circleGeometry
           args={[
-            boxContorl.width,
-            boxContorl.height,
-            boxContorl.depth,
-            boxContorl.widthSeg,
-            boxContorl.heightSeg,
-            boxContorl.depthSeg,
+            boxControl.radius,
+            boxControl.seg,
+            THREE.MathUtils.degToRad(boxControl.thetaStart),
+            THREE.MathUtils.degToRad(boxControl.thetaLength),
           ]}
         />
         <meshStandardMaterial wireframe />
