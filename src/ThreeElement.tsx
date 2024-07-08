@@ -1,62 +1,31 @@
-// import { Box } from "@react-three/drei";
-// import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 import * as THREE from "three";
-import { useControls } from "leva";
 
 const ThreeElement = () => {
   const boxRef = useRef<THREE.Mesh>(null);
-  const boxCopyRef = useRef<THREE.Mesh>(null);
-  const boxControl = useControls({
-    radius: {
-      value: 1,
-      min: 0.1,
-      max: 10,
-      step: 0.1,
-    },
-    seg: {
-      value: 32,
-      min: 1,
-      max: 100,
-      step: 1,
-    },
-    thetaStart: {
-      value: 0,
-      min: 0,
-      max: 360,
-      step: 0.1,
-    },
-    thetaLength: {
-      value: 360,
-      min: 0,
-      max: 360,
-      step: 0.1,
-    },
-  });
-  // useFrame((state, delta) => {
-  //   // state.scene.rotation.x = THREE.MathUtils.degToRad(45);
-  // });
 
-  useEffect(() => {
-    boxCopyRef.current.geometry = boxRef.current?.geometry;
-  }, [boxControl]);
+  useFrame((state, delta) => {});
 
   return (
     <>
-      <directionalLight position={[5, 5, 5]} />
-      <mesh ref={boxRef} position={[0, 0, 0]}>
-        <circleGeometry
-          args={[
-            boxControl.radius,
-            boxControl.seg,
-            THREE.MathUtils.degToRad(boxControl.thetaStart),
-            THREE.MathUtils.degToRad(boxControl.thetaLength),
-          ]}
-        />
-        <meshStandardMaterial wireframe />
+      <directionalLight position={[5, 5, 5]} intensity={5} />
+      <fog attach={"fog"} args={["blue", 3, 10]} />
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry />
+        <meshStandardMaterial wireframe color="red" />
       </mesh>
-      <mesh ref={boxCopyRef} position={[0, 0, 0]}>
-        <meshStandardMaterial color="red" />
+      <mesh position={[2, 0, 0]}>
+        <planeGeometry />
+        <meshLambertMaterial
+          color="red"
+          emissive={"yellow"}
+          visible
+          transparent={false}
+          opacity={1}
+          side={THREE.DoubleSide}
+          fog={false} //fog 영향을 안 받게 됨
+        />
       </mesh>
     </>
   );
