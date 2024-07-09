@@ -8,6 +8,7 @@ function App() {
   return (
     <>
       <Canvas
+        shadows
         camera={{
           fov: 75,
           near: 1,

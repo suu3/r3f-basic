@@ -1,6 +1,7 @@
+import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { Environment, useTexture } from "@react-three/drei";
+import { Environment, useHelper, useTexture } from "@react-three/drei";
 
 export default function LightTest() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -25,43 +26,80 @@ export default function LightTest() {
   }, []);
 
   const dLight = useRef<THREE.DirectionalLight>(null!);
+  useHelper(dLight, THREE.DirectionalLightHelper);
+
+  const sLight = useRef<THREE.SpotLight>(null!);
+  useHelper(sLight, THREE.SpotLightHelper);
+
   return (
     <>
-      {/* <directionalLight position={[5, 5, 5]} intensity={1} /> */}
-      {/* <ambientLight color={"#fff"} intensity={1} /> */}
-      {/* <hemisphereLight args={["blue", "yellow", 2]} /> */}
-
       {/* <directionalLight
-        position={[5, 5, 5]}
-        color="#fff"
-        ref={dLight}
-        intensity={5}
-        target-position={(0, 0, 0)}
-      /> */}
+
+                castShadow
+                shadow-camera-top={10}
+                shadow-camera-bottom={-10}
+                shadow-camera-left={-10}
+                shadow-camera-right={10}
+                shadow-mapSize = {[512,512]}
+
+                ref={dLight}
+                color={'#fff'} 
+                position={[0,5,0]} 
+                intensity={5}
+                target-position={[0,0,2]}
+            /> */}
+
+      {/* <pointLight
+                castShadow
+                shadow-camera-top={10}
+                shadow-camera-bottom={-10}
+                shadow-camera-left={-10}
+                shadow-camera-right={10}
+                shadow-mapSize = {[512,512]}
+                color={'#fff'} 
+                position={[0,0,2]} 
+                intensity={50}
+                distance={5}
+            /> */}
 
       <spotLight
+        castShadow
+        // shadow-camera-top={10}
+        // shadow-camera-bottom={-10}
+        // shadow-camera-left={-10}
+        // shadow-camera-right={10}
+        // shadow-mapSize = {[512,512]}
+        ref={sLight}
         color={"#fff"}
-        position={[0, 0, 2]}
-        intensity={50}
-        distance={5}
-        angle={THREE.MathUtils.degToRad(30)}
-        penumbra={0}
+        position={[0, 5, 0]}
+        intensity={300}
+        distance={10}
+        angle={THREE.MathUtils.degToRad(40)}
+        target-position={[0, 0, 0]}
+        penumbra={0.5}
       />
 
-      <Environment files={"./imgs/hdr1.hdr"} background blur={0.1} />
+      {/* <Environment 
+                files={'./imgs/hdr1.hdr'}
+                background
+                blur={0}
+            /> */}
 
-      {/* 바닥 */}
-      <mesh rotation-x={[THREE.MathUtils.degToRad(-90)]} position-y={-1}>
+      <mesh
+        rotation-x={[THREE.MathUtils.degToRad(-90)]}
+        position-y={-1}
+        receiveShadow
+      >
         <planeGeometry args={[15, 15]} />
         <meshStandardMaterial color={"#020059"} side={THREE.DoubleSide} />
       </mesh>
-      {/* geometry 참조용 */}
+
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <torusKnotGeometry args={[0.5, 0.2]} />
         <meshBasicMaterial visible={false} color="green" />
       </mesh>
       <group ref={groupRef}>
-        <mesh>
+        <mesh castShadow receiveShadow>
           <meshLambertMaterial
             color="red"
             visible={true}
@@ -76,7 +114,7 @@ export default function LightTest() {
           />
         </mesh>
 
-        <mesh>
+        <mesh castShadow receiveShadow>
           <meshPhongMaterial
             color="red"
             visible={true}
@@ -93,7 +131,8 @@ export default function LightTest() {
             flatShading={true}
           />
         </mesh>
-        <mesh>
+
+        <mesh castShadow receiveShadow>
           <meshStandardMaterial
             color="red"
             visible={true}
@@ -110,7 +149,8 @@ export default function LightTest() {
             // flatShading={true}
           />
         </mesh>
-        <mesh>
+
+        <mesh castShadow receiveShadow>
           <meshPhysicalMaterial
             color="#fff"
             visible={true}
@@ -132,7 +172,7 @@ export default function LightTest() {
             // flatShading={true}
           />
         </mesh>
-        <mesh>
+        <mesh castShadow receiveShadow>
           <meshToonMaterial gradientMap={tone} color="pink" />
         </mesh>
       </group>
