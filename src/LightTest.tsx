@@ -31,11 +31,21 @@ export default function LightTest() {
       {/* <ambientLight color={"#fff"} intensity={1} /> */}
       {/* <hemisphereLight args={["blue", "yellow", 2]} /> */}
 
-      <directionalLight
+      {/* <directionalLight
         position={[5, 5, 5]}
         color="#fff"
         ref={dLight}
         intensity={5}
+        target-position={(0, 0, 0)}
+      /> */}
+
+      <spotLight
+        color={"#fff"}
+        position={[0, 0, 2]}
+        intensity={50}
+        distance={5}
+        angle={THREE.MathUtils.degToRad(30)}
+        penumbra={0}
       />
       {/* 바닥 */}
       <mesh rotation-x={[THREE.MathUtils.degToRad(-90)]} position-y={-1}>
