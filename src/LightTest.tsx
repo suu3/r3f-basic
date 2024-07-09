@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useTexture } from "@react-three/drei";
+import { Environment, useTexture } from "@react-three/drei";
 
 export default function LightTest() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -47,6 +47,9 @@ export default function LightTest() {
         angle={THREE.MathUtils.degToRad(30)}
         penumbra={0}
       />
+
+      <Environment files={"./imgs/hdr1.hdr"} background blur={0.1} />
+
       {/* 바닥 */}
       <mesh rotation-x={[THREE.MathUtils.degToRad(-90)]} position-y={-1}>
         <planeGeometry args={[15, 15]} />
