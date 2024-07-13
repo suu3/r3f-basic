@@ -27,19 +27,7 @@ export default function ShowRoom() {
 
   return (
     <>
-      {/* <primitive object={obj} />
-      <primitive object={fbx} /> */}
       <primitive object={gltf.scene} onClick={shoesClick} />
-      {/* <mesh
-        rotation={[
-          THREE.MathUtils.degToRad(45),
-          THREE.MathUtils.degToRad(45),
-          0,
-        ]}
-      >
-        <boxGeometry />
-        <meshStandardMaterial />
-      </mesh> */}
     </>
   );
 }
