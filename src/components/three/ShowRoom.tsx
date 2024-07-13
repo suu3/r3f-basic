@@ -3,12 +3,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { CameraControls } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ShowRoom() {
   const gltf = useLoader(GLTFLoader, "/models/custom.glb");
 
   const { raycaster, camera } = useThree();
+  const [isFitting, setIsFitting] = useState(false);
 
   console.log("gltf : ", gltf);
   const cameraControlsRef = useRef<CameraControls>(null);
@@ -27,17 +28,33 @@ export default function ShowRoom() {
 
   useEffect(() => {
     cameraControlsRef.current?.setTarget(0, 0, 0);
+
+    cameraControlsRef.current?.addEventListener("control", () => {
+      //사용자 클릭 이벤트 등
+      console.log("control");
+      setIsFitting(true); //click하는 순간 fitting 시작
+    });
+    cameraControlsRef.current?.addEventListener("sleep", () => {
+      console.log("sleep");
+      setIsFitting(false);
+    });
   });
 
   let angle = 0;
-  let dis = 2; //distance. 클수록 멀리
+  let dis = 1.2; //distance. 클수록 멀리
+
   useFrame(() => {
-    cameraControlsRef.current?.setPosition(
-      dis * Math.sin(angle),
-      0.8, //살짝 위에서 움직임
-      dis * Math.sin(angle)
-    );
-    angle = angle + 0.01; //속도
+    console.log("isFitting : ", isFitting);
+
+    if (!isFitting) {
+      cameraControlsRef.current?.setPosition(
+        dis * Math.sin(angle),
+        0.8, //살짝 위에서 움직임
+        dis * Math.sin(angle),
+        true
+      );
+      angle = angle + 0.01; //속도
+    }
   });
 
   const shoesClick = () => {
@@ -52,17 +69,23 @@ export default function ShowRoom() {
       firstObj.material = cloneMat;
       const mat = firstObj.material as THREE.MeshStandardMaterial;
       mat.color = new THREE.Color("red");
-      cameraControlsRef.current?.setLookAt(
-        0,
-        5,
-        0,
-        firstObj.position.x,
-        firstObj.position.y,
-        firstObj.position.z,
-        true
-      );
 
-      cameraControlsRef.current?.fitToBox(firstObj, true);
+      // setIsFitting(true);
+
+      cameraControlsRef.current?.fitToBox(firstObj, true).then(() => {
+        //비동기인데 엄청 빨리 끝남.
+        // setIsFitting(false);
+      });
+
+      // cameraControlsRef.current?.setLookAt(
+      //   0,
+      //   5,
+      //   0,
+      //   firstObj.position.x,
+      //   firstObj.position.y,
+      //   firstObj.position.z,
+      //   true
+      // );
     }
   };
 
