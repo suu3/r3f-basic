@@ -2,6 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
+import { CameraControls } from "@react-three/drei";
 
 export default function ShowRoom() {
   const gltf = useLoader(GLTFLoader, "/models/custom.glb");
@@ -27,6 +28,8 @@ export default function ShowRoom() {
 
   return (
     <>
+      <directionalLight position={[3, 3, 3]} />
+      <CameraControls enabled={true} />
       <primitive object={gltf.scene} onClick={shoesClick} />
     </>
   );
