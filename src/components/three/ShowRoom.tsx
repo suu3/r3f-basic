@@ -46,15 +46,30 @@ export default function ShowRoom() {
   useFrame(() => {
     console.log("isFitting : ", isFitting);
 
-    if (!isFitting) {
-      cameraControlsRef.current?.setPosition(
-        dis * Math.sin(angle),
-        0.8, //살짝 위에서 움직임
-        dis * Math.sin(angle),
-        true
-      );
-      angle = angle + 0.01; //속도
-    }
+    // if (!isFitting) {
+    //   cameraControlsRef.current?.setPosition(
+    //     dis * Math.sin(angle),
+    //     0.8, //살짝 위에서 움직임
+    //     dis * Math.sin(angle),
+    //     true
+    //   );
+    //   angle = angle + 0.01; //속도
+    // }
+
+    /**
+     * 신발 자연스럽게 겹치기
+     * - 이런건 실제로는 THREE.js에서 하나하나 조정하는 것보다,
+     * - 이미 그렇게 되어있는 모델을 Import하는게 편함.
+     */
+    const rightShoes = gltf.scene.children[0];
+    const leftShoes = gltf.scene.children[1];
+
+    // rightShoes.rotation.y = THREE.MathUtils.degToRad(10);
+    // leftShoes.rotation.y = THREE.MathUtils.degToRad(300);
+    // leftShoes.rotation.z = 9.3;
+    // leftShoes.position.x = -0.25;
+    // leftShoes.position.y = 0.37;
+    // leftShoes.position.z = 0.44;
   });
 
   const shoesClick = () => {
@@ -105,6 +120,10 @@ export default function ShowRoom() {
           // console.log("camera.position: ", camera.position);
         }}
       />
+      <mesh position={[0, -0.5, 0]} scale={5}>
+        <cylinderGeometry args={[0.4, 0.2, 0.2, 50]} />
+        <meshStandardMaterial />
+      </mesh>
       <primitive object={gltf.scene} onClick={shoesClick} />
     </>
   );
