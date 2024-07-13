@@ -3,6 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { CameraControls } from "@react-three/drei";
+import { useRef } from "react";
 
 export default function ShowRoom() {
   const gltf = useLoader(GLTFLoader, "/models/custom.glb");
@@ -10,6 +11,7 @@ export default function ShowRoom() {
   const { raycaster, camera } = useThree();
 
   console.log("gltf : ", gltf);
+  const cameraControlsRef = useRef<CameraControls>(null);
 
   const shoesClick = () => {
     const intersects = raycaster.intersectObjects(gltf.scene.children, true);
@@ -23,6 +25,17 @@ export default function ShowRoom() {
       firstObj.material = cloneMat;
       const mat = firstObj.material as THREE.MeshStandardMaterial;
       mat.color = new THREE.Color("red");
+      cameraControlsRef.current?.setLookAt(
+        0,
+        5,
+        0,
+        firstObj.position.x,
+        firstObj.position.y,
+        firstObj.position.z,
+        true
+      );
+
+      cameraControlsRef.current?.fitToBox(firstObj, true);
     }
   };
 
@@ -30,6 +43,7 @@ export default function ShowRoom() {
     <>
       <directionalLight position={[3, 3, 3]} />
       <CameraControls
+        ref={cameraControlsRef}
         minDistance={2} // 줌 인할 때 최소 거리
         maxDistance={Infinity} // 줌 아웃할 때 최대 거리
         enabled={true}
