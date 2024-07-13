@@ -7,7 +7,7 @@ import { CameraControls } from "@react-three/drei";
 export default function ShowRoom() {
   const gltf = useLoader(GLTFLoader, "/models/custom.glb");
 
-  const { raycaster } = useThree();
+  const { raycaster, camera } = useThree();
 
   console.log("gltf : ", gltf);
 
@@ -29,7 +29,18 @@ export default function ShowRoom() {
   return (
     <>
       <directionalLight position={[3, 3, 3]} />
-      <CameraControls enabled={true} />
+      <CameraControls
+        minDistance={2} // 줌 인할 때 최소 거리
+        maxDistance={Infinity} // 줌 아웃할 때 최대 거리
+        enabled={true}
+        dollyToCursor={true}
+        infinityDolly={true}
+        onChange={() => {
+          // console.log("onChange");
+          // console.log("camera.zoom: ", camera.zoom);
+          // console.log("camera.position: ", camera.position);
+        }}
+      />
       <primitive object={gltf.scene} onClick={shoesClick} />
     </>
   );

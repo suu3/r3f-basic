@@ -3,7 +3,9 @@ import ShowRoom from "@src/components/three/ShowRoom";
 
 export default function Home() {
   return (
-    <Canvas>
+    <Canvas
+    // orthographic
+    >
       <axesHelper args={[5]} />
       <gridHelper />
       <ShowRoom />
